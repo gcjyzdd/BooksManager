@@ -11,3 +11,10 @@
 2016-11-28 02:20:03,172 - test3.py:186 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
 2016-11-28 02:21:53,504 - test3.py:186 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
 2016-11-28 02:22:59,649 - test3.py:195 - tst - Database added 1779 books.
+2016-11-28 03:34:01,122 - BookManager.py:213 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
+2016-11-28 03:35:07,771 - BookManager.py:222 - tst - Database added 1779 books.
+2016-11-28 04:28:15,341 - BookManager.py:234 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
+2016-11-28 04:28:56,555 - BookManager.py:234 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
+2016-11-28 04:30:00,907 - BookManager.py:243 - tst - Database added 1779 books.
+2016-11-28 05:05:22,604 - BookManager.py:237 - tst - Database loads folder : /media/changjie/Windows/E/Onedrive/ebooks/Optimization
+2016-11-28 05:05:23,502 - BookManager.py:246 - tst - Database added 25 books.

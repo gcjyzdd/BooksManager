@@ -9,7 +9,7 @@ class review_stars():
     the user can also set review score for a book 
     '''
     def __init__(self,master):
-        print "height2: ",master.winfo_height()
+        
         self.stars=[]
         for i in range(5):
             self.stars.append(tk.Canvas(master,width=20,height=20))
@@ -21,13 +21,13 @@ class review_stars():
         label.grid(row=0,column=5,columnspan=3,sticky=(tk.N,tk.S,tk.W,tk.E),padx=10)
         self.label=label
         
-        print "height3: ",self.stars[0].winfo_height()
+        
         self.update()
-        print "height4: ",self.stars[0].winfo_height()
+        
         self.draw(0)
         
     def draw(self,score):
-        print 'height',self.stars[0].winfo_height()
+        #print 'height',self.stars[0].winfo_height()
         #coordinates of a star
         verts = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
         for i in range(len(verts)): 
