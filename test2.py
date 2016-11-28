@@ -4,13 +4,19 @@
 import Tkinter as tk
 from os import listdir
 import subprocess# run bash
-
+import os,re
 
 def open_ebook(path):
     # use absolute path
     print 'path 1 ',path
-    p=subprocess.Popen(['/usr/bin/ebook-viewer',str(path),'&'])
-    print p.pid
+    fn,ext=os.path.splitext(path)
+    
+    if re.match('.*(pdf)', ext, re.I):
+        p=subprocess.Popen(['/usr/bin/evince',str(path)])
+        print p.pid
+    if re.match('.*(epub|mobi|azw3)', ext, re.I):
+        p=subprocess.Popen(['/usr/bin/ebook-viewer',str(path),'&'])
+        print p.pid
     
 def get_book_list(path):
     lists=[]

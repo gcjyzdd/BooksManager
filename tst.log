@@ -1,0 +1,13 @@
+2016-11-24 15:59:37,598 - db.py:20 - tst - first info message
+2016-11-24 15:59:37,598 - db.py:21 - tst - first debug message
+2016-11-24 15:59:59,294 - db.py:20 - tst - first info message
+2016-11-24 15:59:59,294 - db.py:21 - tst - first debug message
+2016-11-28 00:09:03,903 - db.py:174 - tst - Init mysql <0x7f2c6d7656d0> ok.
+2016-11-28 00:09:03,922 - db.py:136 - tst - open lazy connection
+2016-11-28 01:22:57,714 - test3.py:165 - tst - Database loads folder : /home
+2016-11-28 01:23:02,072 - test3.py:165 - tst - Database loads folder : /hom
+2016-11-28 01:24:20,955 - test3.py:166 - tst - Database loads folder : /home/changjie
+2016-11-28 02:16:18,724 - test3.py:186 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
+2016-11-28 02:20:03,172 - test3.py:186 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
+2016-11-28 02:21:53,504 - test3.py:186 - tst - Database loads folder : /home/changjie/Downloads/KAN/KanCloud4
+2016-11-28 02:22:59,649 - test3.py:195 - tst - Database added 1779 books.
