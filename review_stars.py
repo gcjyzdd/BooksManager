@@ -14,7 +14,7 @@ class review_stars():
         for i in range(5):
             self.stars.append(tk.Canvas(master,width=20,height=20))
             self.stars[i].grid(row=0,column=i,sticky=(tk.N,tk.S,tk.W,tk.E))
-            # set score and write to database
+            # set bind here to set score and write to database
             pass
             
         label=tk.Label(master,text='Reivew')
@@ -27,7 +27,10 @@ class review_stars():
         self.draw(0)
         
     def draw(self,score):
-        #print 'height',self.stars[0].winfo_height()
+        '''
+        Hightlight stars according to score.
+        '''
+        
         #coordinates of a star
         verts = [10,40,40,40,50,10,60,40,90,40,65,60,75,90,50,70,25,90,35,60]
         for i in range(len(verts)): 

@@ -1,5 +1,5 @@
 # Easy book manager
-[toc]
+[TOC]
 ## Introduction
 
 This project uses Python with Tkinter and MySQL database to create an ebook manager.
@@ -17,7 +17,7 @@ This project uses Python with Tkinter and MySQL database to create an ebook mana
 - [x] Create 5 stars using canvas which stands for the review score
 - [x] Load a folder and its subfolders, and select all ebooks
 - [x] Store book records to MySQL database
-- [x] Show book list,tags, score, and book description
+- [x] Show book list, tags, score, and book description
 - [x] Select and open a book from the listbox
 - [x] Search ebooks by name
 - [ ] Search ebooks by tag
@@ -69,6 +69,8 @@ The `listbox` and related views are updated when the user presses the search but
 When the search entry is empty, restore the window view to its default view; thus we can research another term and so on.
 
 ![research](./figs/BM3.png)
+
+![research2](./figs/BM5.png)
 
 ###Resize window
 ![resize](./figs/BM4.png)
