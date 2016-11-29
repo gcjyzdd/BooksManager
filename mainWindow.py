@@ -301,8 +301,7 @@ class mainWindow():
         s=self.SName.get()
         self.showlist=db.select('select * from books where name like ?','%'+s+'%')
         self.set_default_display()
-        
-        pass
+                
     
     def searchTag(self):
         pass   
