@@ -337,6 +337,7 @@ class mainWindow():
         def _wrapper(event):
             self.review.draw(i+1)
             # update score
+            db.update('UPDATE books SET score=? where id LIKE ?',i+1,self._curID)
         return _wrapper    
         
         
