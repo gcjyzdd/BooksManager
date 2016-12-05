@@ -12,6 +12,7 @@ import logging.handlers
 import copy
 from review_stars import review_stars
 from load_books import load_folder
+from searchBar import searchBar
 import db
 
 ## set log
@@ -63,31 +64,7 @@ def init_db():
     #db.update('drop table if exists books')
     #db.update('create table books (id varchar(50) primary key, name text, path text, description text, score int, tags text, last_modified real)')
 
-class searchBar(tk.Frame):
-    
-    def __init__(self,master,**kw):
-        self.master=master
-        apply(tk.Frame.__init__,(self,master),kw)
-        
-        en1=tk.Entry(self.master)
-        en1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        
-        btn1=tk.Button(master,text='Search name')
-        btn1.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        #btn1.bind('<Enter>',lambda event:return self.)
-        
-        En1=tk.Entry(FmLS,text="Search")
-        En1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        
-        Btn1=tk.Button(FmLS,text='Search name',command=self.searchName)
-        Btn1.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        
-        En2=tk.Entry(FmLS)
-        En2.grid(row=0,column=3,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
-        
-        Btn2=tk.Button(FmLS,text='Search tags',command=self.searchTag)
-        Btn2.grid(row=0,column=4,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
-        
+
 class mainWindow():
     
     def __init__(self,master):
@@ -124,7 +101,7 @@ class mainWindow():
         #FmLS: search bar on the Left Frame
         FmLS=tk.Frame(FmLeft)
         FmLS.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
-        
+        '''
         En1=tk.Entry(FmLS,text="Search")
         En1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
         En1.bind('<Return>',lambda event:(self.searchName()))
@@ -140,6 +117,13 @@ class mainWindow():
         
         #make the bar resizable
         FmLS.grid_columnconfigure(2, weight=1)
+        '''
+        # set searchBar
+        sBar=searchBar(FmLS);
+        sBar.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.E,tk.W))
+        sBar.sNameBtn['command']=self.searchName
+        sBar.sNameEn.bind('<Return>',lambda event:(self.searchName()))
+        sBar.sTagBtn['command']=self.searchTag
         
         ##scrollbar and listbox
         #FmLL: Listbox on the Left Frame
@@ -233,8 +217,7 @@ class mainWindow():
         self.desp=desp
         self.submitDesp=Btn4
         
-        self.SName=En1
-        self.STag=En2
+        self.sBar=sBar
         self.tags=tags
         self.read=read
         self.EntryFolder=En3
@@ -266,7 +249,7 @@ class mainWindow():
                     self._preSel=self._sel
                             
             # stop searching by name and restore the default view
-            if len(self.SName.get())==0 and self.SNFlag:
+            if len(self.sBar.sNameEn.get())==0 and self.SNFlag:
                 self.SNFlag=False
                 self.showlist=copy.deepcopy(self.booklist)
                 self.set_default_display()
@@ -337,7 +320,8 @@ class mainWindow():
         
     def searchName(self):
         self.SNFlag=True
-        s=self.SName.get()
+        s=self.sBar.sNameEn.get()
+        
         self.showlist=db.select('select * from books where name like ?','%'+s+'%')
         self.set_default_display()
                 
