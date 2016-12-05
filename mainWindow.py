@@ -67,7 +67,7 @@ class searchBar(tk.Frame):
     
     def __init__(self,master,**kw):
         self.master=master
-        apply(tk.Frame.__ini__,(self,master),kw)
+        apply(tk.Frame.__init__,(self,master),kw)
         
         en1=tk.Entry(self.master)
         en1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
@@ -177,8 +177,9 @@ class mainWindow():
         
         ##show review score, drawed by canvas
         review=review_stars(FmRR1)
-        rvCallbacks=map(self.setScore(i),list(range(5)))
-        review.stars[0].bind('<Button-1>',self.setScore)
+        rvCallbacks=map(self.setScore,list(range(5)))
+        for i in range(5):
+            review.stars[i].bind('<Button-1>',rvCallbacks[i])
         
         
         #button to open the selected book
@@ -297,6 +298,8 @@ class mainWindow():
             db.insert('books', **book1)
         logger.info('Database added %d books.' % len(PATH))
         #add a progress bar here
+        self.set_default_display()
+        
         pass
     
     def get_booklist(self):
@@ -363,8 +366,8 @@ class mainWindow():
         
     
     def setScore(self,i):
-        def _wrapper(i):
-            self.review.draw(1+1)
+        def _wrapper(event):
+            self.review.draw(i+1)
             # update score
         return _wrapper    
         
