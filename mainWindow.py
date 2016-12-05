@@ -101,23 +101,7 @@ class mainWindow():
         #FmLS: search bar on the Left Frame
         FmLS=tk.Frame(FmLeft)
         FmLS.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
-        '''
-        En1=tk.Entry(FmLS,text="Search")
-        En1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        En1.bind('<Return>',lambda event:(self.searchName()))
-        
-        Btn1=tk.Button(FmLS,text='Search name',command=self.searchName)
-        Btn1.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        
-        En2=tk.Entry(FmLS)
-        En2.grid(row=0,column=3,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
-        
-        Btn2=tk.Button(FmLS,text='Search tags',command=self.searchTag)
-        Btn2.grid(row=0,column=4,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
-        
-        #make the bar resizable
-        FmLS.grid_columnconfigure(2, weight=1)
-        '''
+
         # set searchBar
         sBar=searchBar(FmLS);
         sBar.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.E,tk.W))

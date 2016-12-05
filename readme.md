@@ -26,7 +26,7 @@ First, we need to set tags for books. The entry should support auto completion
 Add an entry and button. Check if a tag is already existed.
 - [ ] Set review score
 Set callback of the review component. May use `Queue()` to send data to the main window.
-- [ ] Set book description
+- [x] Set book description
 Set a callback function.
 - [ ] Change book name both for database and the file on disk.
 Set a double-click bind which pops up a dialog to set the new name
