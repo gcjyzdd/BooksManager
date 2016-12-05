@@ -54,8 +54,6 @@ class review_stars(tk.Frame):
             self.stars[i].update()
         self.label.update()
 
-        
-    
 class FBtn():
     '''
     four buttons, just a test

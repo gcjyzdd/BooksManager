@@ -20,3 +20,11 @@
 2016-11-28 05:05:23,502 - BookManager.py:246 - tst - Database added 25 books.
 2016-11-29 13:05:47,654 - mainWindow.py:254 - tst - Database loads folder : /home/changjie/Downloads/FreeEbooks
 2016-11-29 13:06:04,418 - mainWindow.py:262 - tst - Database added 488 books.
+2016-12-05 14:46:01,915 - mainWindow.py:291 - tst - Database loads folder : /media/changjie/Windows/E/Onedrive/ebooks/Programming languages
+2016-12-05 14:46:05,109 - mainWindow.py:299 - tst - Database added 57 books.
+2016-12-05 14:48:39,997 - mainWindow.py:291 - tst - Database loads folder : /media/changjie/Windows/E/Onedrive/ebooks/Linux
+2016-12-05 14:48:40,263 - mainWindow.py:299 - tst - Database added 8 books.
+2016-12-05 15:14:58,296 - mainWindow.py:291 - tst - Database loads folder : /media/changjie/Windows/E/Onedrive/ebooks/System Identification
+2016-12-05 15:15:00,000 - mainWindow.py:299 - tst - Database added 34 books.
+2016-12-05 15:16:43,853 - mainWindow.py:291 - tst - Database loads folder : /media/changjie/Windows/E/Onedrive/ebooks/CONTROL
+2016-12-05 15:17:02,346 - mainWindow.py:299 - tst - Database added 214 books.

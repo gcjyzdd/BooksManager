@@ -12,6 +12,7 @@ import logging.handlers
 import copy
 from review_stars import review_stars
 from load_books import load_folder
+from searchBar import searchBar
 import db
 
 ## set log
@@ -63,7 +64,7 @@ def init_db():
     #db.update('drop table if exists books')
     #db.update('create table books (id varchar(50) primary key, name text, path text, description text, score int, tags text, last_modified real)')
 
-    
+
 class mainWindow():
     
     def __init__(self,master):
@@ -100,9 +101,10 @@ class mainWindow():
         #FmLS: search bar on the Left Frame
         FmLS=tk.Frame(FmLeft)
         FmLS.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
-        
+        '''
         En1=tk.Entry(FmLS,text="Search")
         En1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
+        En1.bind('<Return>',lambda event:(self.searchName()))
         
         Btn1=tk.Button(FmLS,text='Search name',command=self.searchName)
         Btn1.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
@@ -115,6 +117,13 @@ class mainWindow():
         
         #make the bar resizable
         FmLS.grid_columnconfigure(2, weight=1)
+        '''
+        # set searchBar
+        sBar=searchBar(FmLS);
+        sBar.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.E,tk.W))
+        sBar.sNameBtn['command']=self.searchName
+        sBar.sNameEn.bind('<Return>',lambda event:(self.searchName()))
+        sBar.sTagBtn['command']=self.searchTag
         
         ##scrollbar and listbox
         #FmLL: Listbox on the Left Frame
@@ -152,6 +161,11 @@ class mainWindow():
         
         ##show review score, drawed by canvas
         review=review_stars(FmRR1)
+        rvCallbacks=map(self.setScore,list(range(5)))
+        for i in range(5):
+            review.stars[i].bind('<Button-1>',rvCallbacks[i])
+        
+        
         #button to open the selected book
         read=tk.Button(FmRR,text='Read',command=self.open_callback)
         read.grid(row=0,column=3,sticky=(tk.N,tk.S,tk.E))
@@ -190,7 +204,7 @@ class mainWindow():
         ##edit and submit description
         FmRSD=tk.Frame(FmRight)
         FmRSD.grid(row=5,column=0)
-        Btn4=tk.Button(FmRSD,text='Submit edit')
+        Btn4=tk.Button(FmRSD,text='Submit edit',command=self.updateDescription)
         Btn4.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.E,tk.W))
         
         ####################The GUI layout is done!###########################
@@ -201,9 +215,9 @@ class mainWindow():
         self.sld=sld
         self.review=review
         self.desp=desp
+        self.submitDesp=Btn4
         
-        self.SName=En1
-        self.STag=En2
+        self.sBar=sBar
         self.tags=tags
         self.read=read
         self.EntryFolder=En3
@@ -211,6 +225,8 @@ class mainWindow():
         
         # selection of the listbox
         self._sel=''
+        self._preSel='x'
+        self._curID=''
         
         # flag to restore search by name
         self.SNFlag=False
@@ -223,13 +239,17 @@ class mainWindow():
             ind=self.lbx.curselection()
             
             #get the selected book path
-            for a in ind:
+            for a in ind:                                                                   
                 self._sel=self.showlist[a].path
-                self.setDisplay(self.showlist[a].id)
-                #update review,description,tags
-            
+                self._curID=self.showlist[a].id
+                
+                if self._sel!=self._preSel:     
+                    self.setDisplay(self.showlist[a].id)
+                    #update review,description,tags
+                    self._preSel=self._sel
+                            
             # stop searching by name and restore the default view
-            if len(self.SName.get())==0 and self.SNFlag:
+            if len(self.sBar.sNameEn.get())==0 and self.SNFlag:
                 self.SNFlag=False
                 self.showlist=copy.deepcopy(self.booklist)
                 self.set_default_display()
@@ -261,6 +281,8 @@ class mainWindow():
             db.insert('books', **book1)
         logger.info('Database added %d books.' % len(PATH))
         #add a progress bar here
+        self.set_default_display()
+        
         pass
     
     def get_booklist(self):
@@ -298,11 +320,41 @@ class mainWindow():
         
     def searchName(self):
         self.SNFlag=True
-        s=self.SName.get()
+        s=self.sBar.sNameEn.get()
+        
         self.showlist=db.select('select * from books where name like ?','%'+s+'%')
         self.set_default_display()
                 
     
     def searchTag(self):
         pass   
+    
+    def updateDescription(self):
+        data=self.desp.get(1.0, tk.END)        
+        print data
+        print 'id ',self._curID
+        print 'UPDATE books SET description="%s" where id LIKE "%s"' %(data,self._curID)
+        
+        db.update('UPDATE books SET description=? where id LIKE ?',data, self._curID)        
+        pass
+    
+    def updateScore(self):
+        pass
+    
+    def updateDisplay(self):
+        pass
+    
+    
+    def test(self,event):
+        print 'Entered!!'
+        
+    
+    def setScore(self,i):
+        def _wrapper(event):
+            self.review.draw(i+1)
+            # update score
+        return _wrapper    
+        
+        
+    
     
