@@ -12,43 +12,76 @@ class Tags(tk.Frame):
 	'''
 	
 	def __init__(self,master,tagStr=''):
+		
 		self.master=master
 		tk.Frame.__init__(self, master)
+		self.setTagEn=None
+		self.tagLabel=None
+		self.labels=[]
+		
+				
+		lb1=tk.Label(self,borderwidth=2,relief="groove",text='Tags:')
+		lb1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E),padx=5,pady=2)
+		self.tagLabel=lb1
+		
+		self.setTagEn=tk.Entry(self,width=6)
 		
 		self.showTags(tagStr)
 		
 		pass
 	
 	def showTags(self,tagStr=None):
-		lb1=tk.Label(self,borderwidth=2,relief="groove",text='Tags:')
-		lb1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E),padx=5,pady=2)
-		
-		
-		self.tagLabel=lb1
+		self.destroyLabels()		
 		
 		# display tags in multiple rows
 		i=0
-		for item in tagStr.split():
-			tk.Label(self,borderwidth=2,bg='white',text=item).grid(row=0,column=i+1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
+		for item in tagStr.split():			
+			self.labels.append(tk.Label(self,borderwidth=2,bg='white',text=item))
+			self.labels[-1].grid(row=0,column=i+1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
 			i+=1
-			pass
+
+		# change position accordingly		
+		self.setTagEn.delete(0, tk.END)		
+		self.setTagEn.grid(row=0,column=i+1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
+		
+		
+		
+		
+	def destroyLabels(self):
+		'''
+		if self.tagLabel:
+			self.tagLabel.destroy()
+		
+		if self.setTagEn:
+			self.setTagEn.destroy()
+			'''
+		for item in self.labels:
+			item.destroy()
+			
+
+	def setTag(self,event):
+		print 'HELLO'
 		pass
+
+def testFun(event):
+	print 'Hello'
 		
-		# change position accordingly
-		en1=tk.Entry(self)
-		en1.grid(row=0,column=i+1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-		
-		self.setTagEn=en1
-		
-	def setTag(self):
-		pass
-	
 def main():
+	import time
 	root=tk.Tk()
 	
-	a=Tags(root,'ABC DEF')
-	a.grid(row=0,column=0)
+	f1=tk.Frame(root,bg='white')
+	f2=tk.Frame(root,bg='red')
+	f1.grid(row=0,column=0)
+	f2.grid(row=1,column=0)
 	
+	a=Tags(f1,'ABC DEF')
+	a.grid(row=0,column=0)
+	a.setTagEn.bind('<Return>',a.setTag)
+	
+	time.sleep(5)
+	
+	Tags(f2,'DE DD A').grid()
 	root.mainloop()
 	
 
