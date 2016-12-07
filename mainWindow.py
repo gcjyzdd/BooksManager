@@ -13,6 +13,7 @@ import copy
 from review_stars import review_stars
 from load_books import load_folder
 from searchBar import searchBar
+from Tags import Tags
 import db
 
 ## set log
@@ -82,7 +83,7 @@ class mainWindow():
         FmLeft.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
         FmLeft.grid_columnconfigure(0,weight=1)
         FmLeft.grid_rowconfigure(1,weight=1)
-        
+
         #FmRight: right frame
         FmRight=tk.Frame(master,width=300,height=500)
         FmRight.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W,tk.E))
@@ -97,29 +98,8 @@ class mainWindow():
         #### to do ####
         # write some subclasses to layout this main window into modules
         ###################################Left Frame###########################################
-        ## search entry and button
-        #FmLS: search bar on the Left Frame
-        FmLS=tk.Frame(FmLeft)
-        FmLS.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
-        '''
-        En1=tk.Entry(FmLS,text="Search")
-        En1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        En1.bind('<Return>',lambda event:(self.searchName()))
-        
-        Btn1=tk.Button(FmLS,text='Search name',command=self.searchName)
-        Btn1.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
-        
-        En2=tk.Entry(FmLS)
-        En2.grid(row=0,column=3,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
-        
-        Btn2=tk.Button(FmLS,text='Search tags',command=self.searchTag)
-        Btn2.grid(row=0,column=4,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
-        
-        #make the bar resizable
-        FmLS.grid_columnconfigure(2, weight=1)
-        '''
         # set searchBar
-        sBar=searchBar(FmLS);
+        sBar=searchBar(FmLeft);
         sBar.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.E,tk.W))
         sBar.sNameBtn['command']=self.searchName
         sBar.sNameEn.bind('<Return>',lambda event:(self.searchName()))
@@ -150,8 +130,15 @@ class mainWindow():
         sld.grid_rowconfigure(0, weight=1)
         
         #show total book number
-        totalboks=tk.Label(FmLeft,text='%d books in database.' % len(self.booklist))
-        totalboks.grid(row=2,column=0,sticky=(tk.N,tk.S,tk.W))
+        FmLE=tk.Frame(FmLeft)
+        FmLE.grid(row=2,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
+        
+        totalboks=tk.Label(FmLE,text='%d books in database.' % len(self.booklist))
+        totalboks.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W))
+        rv=tk.Button(FmLE,text='Reverse',command=self.reverse_order)
+        rv.grid(row=0,column=2,sticky=(tk.N,tk.S,tk.E),pady=2)
+        FmLE.grid_columnconfigure(1, weight=1)
+        
         ####################################Right Frame#############################################################
         FmRR=tk.Frame(FmRight)
         FmRR.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W,tk.E))
@@ -172,19 +159,20 @@ class mainWindow():
         FmRR.grid_columnconfigure(1, weight=1)
                 
         ##show tags
+        
+        
         FmRTags=tk.Frame(FmRight)
         FmRTags.grid(row=2,column=0,sticky=(tk.N,tk.S,tk.E,tk.W),pady=5)
-        labelTag=tk.Label(FmRTags,text='Tags:')
-        labelTag.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W))
-        tags=tk.Label(FmRTags,bg='gray')
-        tags.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W))
-
+        tags=Tags(FmRTags,'C Python')
+        tags.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W))
+        tags.setTagEn.bind('<Return>',self.setTag)
+        
         
         ##load a folder
         FmRLoad=tk.Frame(FmRight)
         FmRLoad.grid(row=3,column=0,sticky=(tk.N,tk.S,tk.W,tk.E),pady=5)
         
-        #load books from a folder to database
+        #load books from a folder and save to database
         Lb1=tk.Label(FmRLoad,text='Load folder:')
         En3=tk.Entry(FmRLoad)
         Btn3=tk.Button(FmRLoad,text='Load',command=self.load_folder)
@@ -217,6 +205,7 @@ class mainWindow():
         self.desp=desp
         self.submitDesp=Btn4
         
+        self.reverse=rv
         self.sBar=sBar
         self.tags=tags
         self.read=read
@@ -225,8 +214,11 @@ class mainWindow():
         
         # selection of the listbox
         self._sel=''
+        self._curSelNum=0
         self._preSel='x'
         self._curID=''
+        self._curBook=''
+        self._allTags=''    #store all tags of all books
         
         # flag to restore search by name
         self.SNFlag=False
@@ -239,9 +231,11 @@ class mainWindow():
             ind=self.lbx.curselection()
             
             #get the selected book path
-            for a in ind:                                                                   
+            for a in ind:
+                self._curSelNum=a                                                                   
                 self._sel=self.showlist[a].path
                 self._curID=self.showlist[a].id
+                self._curBook=db.select('SELECT * FROM books WHERE id like ?',self.showlist[self._curSelNum].id)[0]
                 
                 if self._sel!=self._preSel:     
                     self.setDisplay(self.showlist[a].id)
@@ -290,15 +284,16 @@ class mainWindow():
         
         return booklist
     
-    def set_default_display(self):
+    def set_default_display(self,sel=0):
         
         self.lbx.delete(0, tk.END)
         for book in self.showlist:
             self.lbx.insert(tk.END,book.path)
         #the default selection is set to 0, i.e., the first book
-        self.lbx.select_set(0)        
+        self.lbx.select_set(sel)        
         
-        self.setDisplay(self.booklist[0].id)
+        self.setDisplay(self.booklist[sel].id)
+        self._curBook=db.select('SELECT * FROM books WHERE id like ?',self.booklist[sel].id)[0]
         
     def setDisplay(self,id):
         #print 'id =',id
@@ -313,7 +308,8 @@ class mainWindow():
         self.review.draw(book1.score)
         
         # set tags
-        self.tags['text']=book1.tags
+        self.tags.showTags(book1.tags)
+        #self.tags.showTags('C++ Python')
         
         # set total book number
         self.totalbooks['text']='%d books in database.' % len(self.showlist)
@@ -331,17 +327,16 @@ class mainWindow():
     
     def updateDescription(self):
         data=self.desp.get(1.0, tk.END)        
-        print data
-        print 'id ',self._curID
-        print 'UPDATE books SET description="%s" where id LIKE "%s"' %(data,self._curID)
+        #print data
+        #print 'id ',self._curID
+        #print 'UPDATE books SET description="%s" where id LIKE "%s"' %(data,self._curID)
         
         db.update('UPDATE books SET description=? where id LIKE ?',data, self._curID)        
-        pass
+        
     
-    def updateScore(self):
-        pass
     
     def updateDisplay(self):
+        
         pass
     
     
@@ -353,8 +348,36 @@ class mainWindow():
         def _wrapper(event):
             self.review.draw(i+1)
             # update score
+            db.update('UPDATE books SET score=? where id LIKE ?',i+1,self._curID)
         return _wrapper    
         
+    def setTag(self,event):
+        print 'hello'
+        tag=self.tags.setTagEn.get()
+        curTag=db.select('select tags from books where id like ?',self._curID)[0]['tags']
+        print tag
+        print 'searched:',curTag
+        if not re.match('.*('+tag+').*',curTag,re.I):
+            print 'Set tag...'
+            db.update('UPDATE books SET tags=? WHERE id LIKE ?',curTag+' '+tag,self._curID)
+        else:
+            print '%s already exists' % tag
         
+        self.updateDB()
+        self.updateCurBook()
+        self.tags.showTags(self._curBook.tags)
+        
+    def reverse_order(self):
+        self.showlist=list(reversed(self.showlist))
+        self.set_default_display()
+            
+    def updateDB(self):
+        self.booklist=self.get_booklist()
+        if self.SNFlag:
+            s=self.sBar.sNameEn.get()
+            self.showlist=db.select('select * from books where name like ?','%'+s+'%')
+        pass
     
-    
+    def updateCurBook(self):
+        self._curBook=db.select('SELECT * FROM books WHERE id like ?',self.showlist[self._curSelNum].id)[0]
+        

@@ -24,13 +24,13 @@ This project uses Python with Tkinter and MySQL database to create an ebook mana
 First, we need to set tags for books. The entry should support auto completion
 - [ ] Set tags
 Add an entry and button. Check if a tag is already existed.
-- [ ] Set review score
+- [x] Set review score
 Set callback of the review component. May use `Queue()` to send data to the main window.
-- [ ] Set book description
+- [x] Set book description
 Set a callback function.
 - [ ] Change book name both for database and the file on disk.
 Set a double-click bind which pops up a dialog to set the new name
-
+- [ ] Search by multiple choices
 ### Extensions
 Create a virtual file tree which allows to categorize books by collections.
 
