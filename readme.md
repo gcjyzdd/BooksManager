@@ -22,7 +22,7 @@ This project uses Python with Tkinter and MySQL database to create an ebook mana
 - [x] Search ebooks by name
 - [ ] Search ebooks by tag
 First, we need to set tags for books. The entry should support auto completion
-- [ ] Set tags
+- [x] Set tags
 Add an entry and button. Check if a tag is already existed.
 - [x] Set review score
 Set callback of the review component. May use `Queue()` to send data to the main window.
@@ -74,3 +74,8 @@ When the search entry is empty, restore the window view to its default view; thu
 
 ###Resize window
 ![resize](./figs/BM4.png)
+
+### set tags, reverse search order, update description, and rate a book
+Dec 7th 2016 Update:
+
+![set tags](./figs/Settags.png)
