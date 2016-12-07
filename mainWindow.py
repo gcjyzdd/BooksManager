@@ -355,13 +355,21 @@ class mainWindow():
         print 'hello'
         tag=self.tags.setTagEn.get()
         curTag=db.select('select tags from books where id like ?',self._curID)[0]['tags']
+        curTL=set(curTag.lower().split())
+        curTag=''
+        for item in curTL:
+            curTag+=item+' ' 
+            
         print tag
         print 'searched:',curTag
+        
         if not re.match('.*('+tag+').*',curTag,re.I):
             print 'Set tag...'
             db.update('UPDATE books SET tags=? WHERE id LIKE ?',curTag+' '+tag,self._curID)
         else:
             print '%s already exists' % tag
+            db.update('UPDATE books SET tags=? WHERE id LIKE ?',curTag,self._curID)
+            
         
         self.updateDB()
         self.updateCurBook()
