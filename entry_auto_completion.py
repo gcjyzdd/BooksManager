@@ -1,16 +1,16 @@
-from Tkinter import *
+import Tkinter as tk
 import re
 
 
 
-class AutocompleteEntry(Entry):
-    def __init__(self, lista, *args, **kwargs):
+class AutocompleteEntry(tk.Entry):
+    def __init__(self, master,lista, **kwargs):
         
-        Entry.__init__(self, *args, **kwargs)
+        tk.Entry.__init__(self, master, **kwargs)
         self.lista = lista        
         self.var = self["textvariable"]
         if self.var == '':
-            self.var = self["textvariable"] = StringVar()
+            self.var = self["textvariable"] = tk.StringVar()
 
         self.var.trace('w', self.changed)
         self.bind("<Right>", self.selection)
@@ -28,15 +28,15 @@ class AutocompleteEntry(Entry):
             words = self.comparison()
             if words:            
                 if not self.lb_up:
-                    self.lb = Listbox()
+                    self.lb = tk.Listbox()
                     self.lb.bind("<Double-Button-1>", self.selection)
                     self.lb.bind("<Right>", self.selection)
                     self.lb.place(x=self.winfo_x(), y=self.winfo_y()+self.winfo_height())
                     self.lb_up = True
                 
-                self.lb.delete(0, END)
+                self.lb.delete(0, tk.END)
                 for w in words:
-                    self.lb.insert(END,w)
+                    self.lb.insert(tk.END,w)
             else:
                 if self.lb_up:
                     self.lb.destroy()
@@ -45,10 +45,10 @@ class AutocompleteEntry(Entry):
     def selection(self, event):
 
         if self.lb_up:
-            self.var.set(self.lb.get(ACTIVE))
+            self.var.set(self.lb.get(tk.ACTIVE))
             self.lb.destroy()
             self.lb_up = False
-            self.icursor(END)
+            self.icursor(tk.END)
 
     def up(self, event):
 
@@ -70,7 +70,7 @@ class AutocompleteEntry(Entry):
                 index = '0'
             else:
                 index = self.lb.curselection()[0]
-            if index != END:                        
+            if index != tk.END:                        
                 self.lb.selection_clear(first=index)
                 index = str(int(index)+1)        
                 self.lb.selection_set(first=index)
@@ -85,13 +85,13 @@ class AutocompleteEntry(Entry):
         
         
 if __name__ == '__main__':
-    root = Tk()
-    lista = ['a', 'actions', 'additional', 'also', 'an', 'and', 'angle', 'are', 'as', 'be', 'bind', 'bracket', 'brackets', 'button', 'can', 'cases', 'configure', 'course', 'detail', 'enter', 'event', 'events', 'example', 'field', 'fields', 'for', 'give', 'important', 'in', 'information', 'is', 'it', 'just', 'key', 'keyboard', 'kind', 'leave', 'left', 'like', 'manager', 'many', 'match', 'modifier', 'most', 'of', 'or', 'others', 'out', 'part', 'simplify', 'space', 'specifier', 'specifies', 'string;', 'that', 'the', 'there', 'to', 'type', 'unless', 'use', 'used', 'user', 'various', 'ways', 'we', 'window', 'wish', 'you']
+    root = tk.Tk()
+    lista = [u'a', u'actions', u'additional', 'also', 'an', 'and', 'angle', 'are', 'as', 'be', 'bind', 'bracket', 'brackets', 'button', 'can', 'cases', 'configure', 'course', 'detail', 'enter', 'event', 'events', 'example', 'field', 'fields', 'for', 'give', 'important', 'in', 'information', 'is', 'it', 'just', 'key', 'keyboard', 'kind', 'leave', 'left', 'like', 'manager', 'many', 'match', 'modifier', 'most', 'of', 'or', 'others', 'out', 'part', 'simplify', 'space', 'specifier', 'specifies', 'string;', 'that', 'the', 'there', 'to', 'type', 'unless', 'use', 'used', 'user', 'various', 'ways', 'we', 'window', 'wish', 'you']
 
-    entry = AutocompleteEntry(lista, root)
+    entry = AutocompleteEntry(root,lista)
     entry.grid(row=0, column=0)
-    Button(text='nothing').grid(row=1, column=0)
-    Button(text='nothing').grid(row=2, column=0)
-    Button(text='nothing').grid(row=3, column=0)
+    tk.Button(text='nothing').grid(row=1, column=0)
+    tk.Button(text='nothing').grid(row=2, column=0)
+    tk.Button(text='nothing').grid(row=3, column=0)
 
     root.mainloop()

@@ -77,6 +77,15 @@ class mainWindow():
         #showlist is the book list shwon in the listbox
         self.showlist=copy.deepcopy(self.booklist)        
         
+        # selection of the listbox
+        self._sel=''
+        self._curSelNum=0
+        self._preSel='x'
+        self._curID=''
+        self._curBook=''
+        self._allTags=self._getAllTags()    #store all tags of all books
+        print self._allTags
+        
         ##layout components
         #FmLeft:left frame
         FmLeft=tk.Frame(master,width=400,height=500)
@@ -99,7 +108,7 @@ class mainWindow():
         # write some subclasses to layout this main window into modules
         ###################################Left Frame###########################################
         # set searchBar
-        sBar=searchBar(FmLeft);
+        sBar=searchBar(FmLeft,self._allTags);
         sBar.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.E,tk.W))
         sBar.sNameBtn['command']=self.searchName
         sBar.sNameEn.bind('<Return>',lambda event:(self.searchName()))
@@ -212,13 +221,7 @@ class mainWindow():
         self.EntryFolder=En3
         self.totalbooks=totalboks
         
-        # selection of the listbox
-        self._sel=''
-        self._curSelNum=0
-        self._preSel='x'
-        self._curID=''
-        self._curBook=''
-        self._allTags=''    #store all tags of all books
+
         
         # flag to restore search by name
         self.SNFlag=False
@@ -232,6 +235,7 @@ class mainWindow():
             
             #get the selected book path
             for a in ind:
+                
                 self._curSelNum=a                                                                   
                 self._sel=self.showlist[a].path
                 self._curID=self.showlist[a].id
@@ -314,13 +318,17 @@ class mainWindow():
         
         # set total book number
         self.totalbooks['text']='%d books in database.' % len(self.showlist)
-        
-    def searchName(self):
-        self.SNFlag=True
+    
+    def _searchName(self):
         s=self.sBar.sNameEn.get()
         sName=s.split()
         selectSyn='SELECT * FROM books WHERE name like ?'+' AND name LIKE ?'*(len(sName)-1)
-        self.showlist=db.select(selectSyn,*map(lambda s:'%%%s%%' % s, sName))        
+        return db.select(selectSyn,*map(lambda s:'%%%s%%' % s, sName))
+            
+    def searchName(self):
+        self.SNFlag=True
+        # select multiple values splitted by white space        
+        self.showlist=self._searchName()     
         self.set_default_display()
                 
     
@@ -362,8 +370,8 @@ class mainWindow():
         for item in curTL:
             curTag+=item+' ' 
             
-        print tag
-        print 'searched:',curTag
+        #print tag
+        #print 'searched:',curTag
         
         if not re.match('.*('+re.escape(tag)+').*',curTag,re.I):
             print 'Set tag...'
@@ -371,8 +379,7 @@ class mainWindow():
         else:
             print '%s already exists' % tag
             db.update('UPDATE books SET tags=? WHERE id LIKE ?',curTag,self._curID)
-            
-        
+                    
         self.updateDB()
         self.updateCurBook()
         self.tags.showTags(self._curBook.tags)
@@ -383,11 +390,20 @@ class mainWindow():
             
     def updateDB(self):
         self.booklist=self.get_booklist()
-        if self.SNFlag:
-            s=self.sBar.sNameEn.get()
-            self.showlist=db.select('select * from books where name like ?','%'+s+'%')
+        if self.SNFlag:            
+            self.showlist=self._searchName()
         pass
     
     def updateCurBook(self):
+
         self._curBook=db.select('SELECT * FROM books WHERE id like ?',self.showlist[self._curSelNum].id)[0]
+        
+    def _getAllTags(self):
+        tagList=db.select('SELECT tags FROM books')
+        splitTags=[]
+        for item in tagList:
+            temp=item.tags.split()
+            for t in temp:
+                splitTags.append(t)
+        return list(set(splitTags))
         

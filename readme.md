@@ -21,6 +21,7 @@ This project uses Python with Tkinter and MySQL database to create an ebook mana
 - [x] Select and open a book from the listbox
 - [x] Search ebooks by name
 - [ ] Search ebooks by tag
+- [x] Tags auto-completion
 First, we need to set tags for books. The entry should support auto completion
 - [x] Set tags
 Add an entry and button. Check if a tag is already existed.
@@ -79,3 +80,12 @@ When the search entry is empty, restore the window view to its default view; thu
 Dec 7th 2016 Update:
 
 ![set tags](./figs/Settags.png)
+
+### search multiple values
+
+![searchMpvalues](./figs/searchMPvalues.png)
+
+### tag auto-completetion
+
+![autoComp](./figs/TagAutoComplete.png)
+

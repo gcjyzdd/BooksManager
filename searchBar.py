@@ -4,23 +4,24 @@
 __author__="Changjie Guan"
 
 import Tkinter as tk
-
+from entry_auto_completion import AutocompleteEntry
 
 class searchBar(tk.Frame):
     '''
     define a search bar for book manager. It supports search-by-name and search-by-tag
     '''
-    def __init__(self,master,**kw):
-        self.master=master
-        apply(tk.Frame.__init__,(self,master),kw)
-        
+    def __init__(self,master,listAuto,**kw):
+        #self.master=master
+        #apply(tk.Frame.__init__,(self,master),kw)
+        tk.Frame.__init__(self, master, **kw)
         en1=tk.Entry(self)
         en1.grid(row=0,column=0,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
         
         btn1=tk.Button(self,text='Search name')
         btn1.grid(row=0,column=1,sticky=(tk.N,tk.S,tk.W),padx=5,pady=2)
                 
-        en2=tk.Entry(self)
+        #en2=tk.Entry(self)
+        en2=AutocompleteEntry(self,listAuto)
         en2.grid(row=0,column=3,sticky=(tk.N,tk.S,tk.E),padx=5,pady=2)
         
         btn2=tk.Button(self,text='Search Tag')
