@@ -28,3 +28,7 @@
 2016-12-05 15:15:00,000 - mainWindow.py:299 - tst - Database added 34 books.
 2016-12-05 15:16:43,853 - mainWindow.py:291 - tst - Database loads folder : /media/changjie/Windows/E/Onedrive/ebooks/CONTROL
 2016-12-05 15:17:02,346 - mainWindow.py:299 - tst - Database added 214 books.
+2016-12-09 12:15:41,649 - mainWindow.py:268 - tst - Database loads folder : /media/changjie/Windows/Users/changjie/Resilio Sync/Kindle伴侣精品书库/技术
+2016-12-09 12:15:53,346 - mainWindow.py:276 - tst - Database added 322 books.
+2016-12-09 12:31:35,549 - mainWindow.py:268 - tst - Database loads folder : /home/changjie/Documents/MyBooks
+2016-12-09 12:31:35,858 - mainWindow.py:276 - tst - Database added 8 books.

@@ -277,6 +277,7 @@ class mainWindow():
         #add a progress bar here
         self.set_default_display()
         
+        #to do: update a folder when new books added
         pass
     
     def get_booklist(self):
@@ -317,8 +318,9 @@ class mainWindow():
     def searchName(self):
         self.SNFlag=True
         s=self.sBar.sNameEn.get()
-        
-        self.showlist=db.select('select * from books where name like ?','%'+s+'%')
+        sName=s.split()
+        selectSyn='SELECT * FROM books WHERE name like ?'+' AND name LIKE ?'*(len(sName)-1)
+        self.showlist=db.select(selectSyn,*map(lambda s:'%%%s%%' % s, sName))        
         self.set_default_display()
                 
     
@@ -352,7 +354,7 @@ class mainWindow():
         return _wrapper    
         
     def setTag(self,event):
-        print 'hello'
+        
         tag=self.tags.setTagEn.get()
         curTag=db.select('select tags from books where id like ?',self._curID)[0]['tags']
         curTL=set(curTag.lower().split())
@@ -363,7 +365,7 @@ class mainWindow():
         print tag
         print 'searched:',curTag
         
-        if not re.match('.*('+tag+').*',curTag,re.I):
+        if not re.match('.*('+re.escape(tag)+').*',curTag,re.I):
             print 'Set tag...'
             db.update('UPDATE books SET tags=? WHERE id LIKE ?',curTag+' '+tag,self._curID)
         else:

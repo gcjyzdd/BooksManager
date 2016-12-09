@@ -133,8 +133,15 @@ def main2():
         filterBookName(join(PATH[i],FN[i])+'.'+EXT[i])
     print '%d books found in this folder' % len(PATH)
     
+
+def main3():
+    #P,F,E=load_folder('/home/changjie/foo')
+    P,F,E=load_folder('/media/changjie/Windows/Users/changjie/Resilio Sync/Kindle伴侣精品书库/技术')
+    for i in range(len(P)):
+        print P[i]+F[i]+E[i]
+    pass
     
 if __name__=='__main__':
-    main2()
+    main3()
     #main()    
     
