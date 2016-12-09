@@ -77,7 +77,7 @@ class AutocompleteEntry(tk.Entry):
                 self.lb.activate(index) 
 
     def comparison(self):
-        pattern = re.compile('.*' + self.var.get() + '.*')
+        pattern = re.compile('.*' + re.escape(self.var.get()) + '.*')
         return [w for w in self.lista if re.match(pattern, w)]
     
     def update_lista(self,lista):

@@ -113,6 +113,7 @@ class mainWindow():
         sBar.sNameBtn['command']=self.searchName
         sBar.sNameEn.bind('<Return>',lambda event:(self.searchName()))
         sBar.sTagBtn['command']=self.searchTag
+        sBar.sTagEn.bind('<Return>',lambda event:(self.searchTag()))
         
         ##scrollbar and listbox
         #FmLL: Listbox on the Left Frame
@@ -225,6 +226,7 @@ class mainWindow():
         
         # flag to restore search by name
         self.SNFlag=False
+        self.STFlag=False
         # set default view
         self.set_default_display()
         
@@ -247,8 +249,9 @@ class mainWindow():
                     self._preSel=self._sel
                             
             # stop searching by name and restore the default view
-            if len(self.sBar.sNameEn.get())==0 and self.SNFlag:
+            if (len(self.sBar.sNameEn.get())==0 and self.SNFlag) or (self.sBar.sTagEn.var.get()=='' and self.STFlag):
                 self.SNFlag=False
+                self.STFlag=False
                 self.showlist=copy.deepcopy(self.booklist)
                 self.set_default_display()
                 
@@ -322,7 +325,7 @@ class mainWindow():
     def _searchName(self):
         s=self.sBar.sNameEn.get()
         sName=s.split()
-        selectSyn='SELECT * FROM books WHERE name like ?'+' AND name LIKE ?'*(len(sName)-1)
+        selectSyn='SELECT * FROM books WHERE name LIKE ?'+' AND name LIKE ?'*(len(sName)-1)
         return db.select(selectSyn,*map(lambda s:'%%%s%%' % s, sName))
             
     def searchName(self):
@@ -331,10 +334,17 @@ class mainWindow():
         self.showlist=self._searchName()     
         self.set_default_display()
                 
+    def _searchTag(self):
+        tags=self.sBar.sTagEn.var.get()
+        splitTags=tags.split()
+        selectSyn='SELECT * FROM books WHERE tags LIKE ?'+' AND name LIKE ?'*(len(splitTags)-1)
+        return db.select(selectSyn,*map(lambda s:'%%%s%%' % s, splitTags))
     
     def searchTag(self):
-        pass   
-    
+        self.STFlag=True
+        self.showlist=self._searchTag()
+        self.set_default_display()
+            
     def updateDescription(self):
         data=self.desp.get(1.0, tk.END)        
         #print data
@@ -383,6 +393,8 @@ class mainWindow():
         self.updateDB()
         self.updateCurBook()
         self.tags.showTags(self._curBook.tags)
+        self._updateAllTags()
+        self.sBar.sTagEn.update_lista(self._allTags)
         
     def reverse_order(self):
         self.showlist=list(reversed(self.showlist))
@@ -392,8 +404,7 @@ class mainWindow():
         self.booklist=self.get_booklist()
         if self.SNFlag:            
             self.showlist=self._searchName()
-        pass
-    
+            
     def updateCurBook(self):
 
         self._curBook=db.select('SELECT * FROM books WHERE id like ?',self.showlist[self._curSelNum].id)[0]
@@ -406,4 +417,8 @@ class mainWindow():
             for t in temp:
                 splitTags.append(t)
         return list(set(splitTags))
-        
+    
+    def _updateAllTags(self):
+        self._allTags=self._getAllTags()
+    
+    
